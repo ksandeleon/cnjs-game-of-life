@@ -1,5 +1,6 @@
 import pygame
 import sys
+import math
 
 pygame.init()
 
@@ -7,8 +8,16 @@ pygame.init()
 WIDTH, HEIGHT = 600, 600
 ROWS, COLS = 30, 30
 CELL_SIZE = WIDTH // COLS
-LIVE_COLOR = (255, 105, 180)  # Hot pink
 DEAD_COLOR = (0, 0, 0)        # Black
+
+
+def get_pulse_color(tick):
+    pulse = (math.sin(tick*0.05)+1)/2
+    r = int(255)
+    g = int(105+pulse*(182-105))
+    b = int(180 + pulse * (255-180))
+    return (r,g,b)
+
 
 heart_cells = [
     (13, 12), (13, 13), (13, 16), (13, 17),

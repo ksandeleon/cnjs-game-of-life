@@ -44,25 +44,31 @@ for row, col in heart_cells:
 
 
 class Sparkle:
-    def __init__(self, row, col):
-        self.row = row
-        self.col = col
-        self.life = random.randint(20,40)
+    def __init__(self, center_x, center_y):
+        self.x = center_x + random.randint(-40, 40)
+        self.y = center_y + random.randint(-40, 40)
+        self.radius = random.randint(6, 12)
+        self.life = random.randint(40, 80)
         self.max_life = self.life
-        self.radius = random.randint(2,4)
+        self.dx = random.uniform(-0.3, 0.3)
+        self.dy = random.uniform(-0.3, 0.3)
 
     def update(self):
         self.life -= 1
+        self.x += self.dx
+        self.y += self.dy
 
     def is_dead(self):
         return self.life <= 0
 
-    def draw(self,surface):
-        alpha = int(255 * (self.life/self.max_life))
-        sparkle_color = (255,255,255,alpha)
-        sparkle_surf = pygame.Surface((CELL_SIZE,CELL_SIZE), pygame.SRCALPHA)
-        pygame.draw.circle(sparkle_surf, sparkle_color, (CELL_SIZE//2,CELL_SIZE//2),self.radius)
-        surface.blit(sparkle_surf,(self.col*CELL_SIZE,self.row*CELL_SIZE))
+    def draw(self, surface):
+        alpha = int(200 * (self.life / self.max_life))
+        sparkle_color = (255, 255, 255, alpha)
+        sparkle_surf = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA)
+        pygame.draw.circle(sparkle_surf, sparkle_color, (self.radius, self.radius), self.radius)
+        surface.blit(sparkle_surf, (self.x - self.radius, self.y - self.radius))
+
+
 
 def draw_grid(tick):
     pulse_color = get_pulse_color(tick)
@@ -91,8 +97,10 @@ while running:
     draw_grid(tick)
 
     if random.random() <0.1:
-        r,c, = random.choice(heart_cells)
-        sparkles.append(Sparkle(r,c))
+        center_x = 15 * CELL_SIZE
+        center_y = 16 * CELL_SIZE
+        sparkles.append(Sparkle(center_x, center_y))
+
 
     for sparkle in sparkles[:]:
         sparkle.update()

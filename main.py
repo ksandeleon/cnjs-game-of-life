@@ -42,15 +42,16 @@ for row, col in heart_cells:
     grid[row][col] = 1
 
 
-def draw_grid():
+def draw_grid(tick):
+    pulse_color = get_pulse_color(tick)
     for row in range(ROWS):
         for col in range(COLS):
-            color = LIVE_COLOR if grid[row][col] else DEAD_COLOR
+            color = pulse_color if grid[row][col] else DEAD_COLOR
             pygame.draw.rect(win, color, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1))
 
 def draw_message():
     font = pygame.font.SysFont("Arial", 24)
-    text = font.render("You light up my heart 💖", True, (255, 182, 193))  # light pink
+    text = font.render("My heart is only yours Joanne :>", True, (255, 182, 193))  # light pink
     win.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - 40))
 
 
@@ -58,13 +59,17 @@ def draw_message():
 #main loop
 running = True
 clock = pygame.time.Clock()
+tick = 0
 
 while running:
     clock.tick(60)
     win.fill(DEAD_COLOR)
-    draw_grid()
+
+    draw_grid(tick)
     draw_message()
     pygame.display.flip()
+
+    tick += 1
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

@@ -1,6 +1,7 @@
 import pygame
 import sys
 import math
+import random
 
 pygame.init()
 
@@ -42,6 +43,27 @@ for row, col in heart_cells:
     grid[row][col] = 1
 
 
+class Sparkle:
+    def __init__(self, row, col):
+        self.row = row
+        self.col = col
+        self.life = random.randint(20,40)
+        self.max_life = self.life
+        self.radius = random.randint(2,4)
+
+    def update(self):
+        self.life -= 1
+
+    def is_dead(self):
+        return self.life <= 0
+
+    def draw(self,surface):
+        alpha = int(255 * (self.life/self.maxlife))
+        sparkle_color = (255,255,255,alpha)
+        sparkle_surf = pygame.Surface((CELL_SIZE,CELL_SIZE), pygame.SRCALPHA)
+        pygame.draw_circle(sparkle_surf, sparkle_color, (CELL_SIZE//2,CELL_SIZE//2),self.radius)
+        surface.blit(sparkle_surf,(self.col*CELL_SIZE,self.row*CELL_SIZE))
+
 def draw_grid(tick):
     pulse_color = get_pulse_color(tick)
     for row in range(ROWS):
@@ -51,7 +73,7 @@ def draw_grid(tick):
 
 def draw_message():
     font = pygame.font.SysFont("Arial", 24)
-    text = font.render("My heart is only yours Joanne :>", True, (255, 182, 193))  # light pink
+    text = font.render("You light up my heart :>", True, (255, 182, 193))  # light pink
     win.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT - 40))
 
 
@@ -60,12 +82,24 @@ def draw_message():
 running = True
 clock = pygame.time.Clock()
 tick = 0
+sparkles = []
 
 while running:
     clock.tick(60)
     win.fill(DEAD_COLOR)
 
     draw_grid(tick)
+
+    if random.random() <0.1:
+        r,c, = random.choice(heart_cells)
+        sparkles.append(Sparkle(r,c))
+
+    for sparkle in sparkles[:]:
+        sparkle.update()
+        sparkle.draw(win)
+        if sparkle.is_dead():
+            sparkles.remove(sparkle)
+
     draw_message()
     pygame.display.flip()
 

@@ -58,10 +58,10 @@ class Sparkle:
         return self.life <= 0
 
     def draw(self,surface):
-        alpha = int(255 * (self.life/self.maxlife))
+        alpha = int(255 * (self.life/self.max_life))
         sparkle_color = (255,255,255,alpha)
         sparkle_surf = pygame.Surface((CELL_SIZE,CELL_SIZE), pygame.SRCALPHA)
-        pygame.draw_circle(sparkle_surf, sparkle_color, (CELL_SIZE//2,CELL_SIZE//2),self.radius)
+        pygame.draw.circle(sparkle_surf, sparkle_color, (CELL_SIZE//2,CELL_SIZE//2),self.radius)
         surface.blit(sparkle_surf,(self.col*CELL_SIZE,self.row*CELL_SIZE))
 
 def draw_grid(tick):
